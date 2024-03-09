@@ -1,6 +1,6 @@
 {
-    "name": "github_issues",
-    "short_name": "github_issues",
+    "name": "github_track",
+    "short_name": "github_track",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

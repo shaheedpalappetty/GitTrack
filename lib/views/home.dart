@@ -41,49 +41,56 @@ class _HomePageState extends State<HomePage> {
         body: BlocBuilder<FetchBloc, FetchState>(
           builder: (context, state) {
             if (state is FetchGitIssuesSuccessState) {
-              return Container(
-                margin: const EdgeInsets.all(10),
-                height: 210,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.grey,
+              return ListView.separated(
+                itemCount: state.data.length,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 10,
                 ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ListTile(
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.black,
-                        radius: 30,
-                        backgroundImage:
-                            NetworkImage(state.data[0].user.avatarUrl),
+                itemBuilder: (context, index) => Container(
+                  margin: const EdgeInsets.all(10),
+                  width: double.maxFinite,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.black,
+                          radius: 30,
+                          backgroundImage:
+                              NetworkImage(state.data[index].user.avatarUrl),
+                        ),
+                        title: Text(state.data[index].title),
+                        subtitle: const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("FirstName MiddleName"),
+                            Text("March-08-2024")
+                          ],
+                        ),
                       ),
-                      title: Text(state.data[0].title),
-                      subtitle: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("FirstName MiddleName"),
-                          Text("March-08-2024")
-                        ],
+                      const SizedBox(
+                        height: 15,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: Text(
-                        description.length > 200
-                            ? description.substring(0, 200)
-                            : description,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Text(
+                          state.data[index].body.toString().length > 200
+                              ? state.data[index].body
+                                  .toString()
+                                  .substring(0, 200)
+                              : state.data[index].body.toString(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    )
-                  ],
+                      const SizedBox(
+                        height: 15,
+                      )
+                    ],
+                  ),
                 ),
               );
             } else if (state is FetchGitIssuesErrorState) {
@@ -99,6 +106,5 @@ class _HomePageState extends State<HomePage> {
 
   fetchData() async {
     context.read<FetchBloc>().add(FetchGitIssuesEvent());
-    // await Future.delayed(const Duration(seconds: 5));
   }
 }
